@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
@@ -9,45 +9,42 @@ import Spiderman from './pages/Spiderman';
 import Joker from './pages/Joker';
 import Lighthouse from './pages/Lighthouse';
 
-function App() {
-  return (
-   <Router>
-    <div>
-      <h1>Routing App </h1>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/spiderman">Spiderman</Link>
-          </li>
-          <li>
-            <Link to="/lighthouse">Lighthouse</Link>
-          </li>
-          <li>
-            <Link to="/joker">Joker</Link>
-          </li>
-          <li>
-            <Link to="/birdie">Birdie</Link>
-          </li>
-          <li>
-            <Link to="/parasite">Parasite</Link>
-          </li>
-        </ul>
-      </nav>
-      <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/joker" component={Joker} />
-      <Route path="/parasite" component={Parasite} />
-      <Route path="/lighthouse" component={Lighthouse}/>
-      <Route path="/spiderman" component={Spiderman}/>
-      <Route path="/birdie" component={Birdie}/>
+import movies from "./store/movies";
+import Movie from "./pages/Movie";
 
-      </Switch>
-    </div>
-    </Router>
-  );
+class App extends Component{
+  constructor(){
+    super()
+    this.state = {
+      allMovies: movies
+    }
+  }
+  render(){
+    return (
+     <Router>
+      <div>
+        <h1>Routing App </h1>
+        <nav>
+          <ul>
+            { this.state.allMovies.map((movie, index) =>
+            <li key={ index }>
+              <Link to={ `/movies/${movie.id}` }>
+                { movie.name }
+              </Link>
+           </li>
+           )}
+          </ul>
+        </nav>
+        <Switch>
+          <Route
+            path="/movies/:id"
+            render={ (props) => <Movie {...props} movies={ this.state.allMovies } /> }
+            />
+        </Switch>
+      </div>
+      </Router>
+    );
+  }
 }
 
 export default App;
